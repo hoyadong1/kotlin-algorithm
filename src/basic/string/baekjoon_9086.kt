@@ -1,4 +1,4 @@
-package basic
+package basic.string
 
 fun main() {
     val n = readln().toInt()

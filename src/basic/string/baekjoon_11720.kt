@@ -1,4 +1,6 @@
-package basic
+package basic.string
+
+import kotlin.text.iterator
 
 fun main(){
     readln()
