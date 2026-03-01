@@ -1,7 +1,7 @@
 package basic.math
 
 fun main(){
-    var n = readln().toInt()
+    val n = readln().toInt()
     var count = 1
     var num = 1
 
