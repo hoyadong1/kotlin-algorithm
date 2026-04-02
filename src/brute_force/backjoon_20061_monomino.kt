@@ -1,2 +1,0 @@
-package brute_force
-
