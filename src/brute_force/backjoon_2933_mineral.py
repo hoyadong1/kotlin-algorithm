@@ -16,15 +16,14 @@ def throw(height, turn):
     r = R - height
     if turn % 2 == 0:
         for c in range(C):
-            if board[r][c] == "x":
-                board[r][c] = "."
-                return (r, c)
+            if board[r][c] == 'x':
+                board[r][c] = '.'
+                return
     else:
         for c in range(C - 1, -1, -1):
-            if board[r][c] == "x":
-                board[r][c] = "."
-                return (r, c)
-    return None
+            if board[r][c] == 'x':
+                board[r][c] = '.'
+                return
 
 
 def bfs_ground():
@@ -32,16 +31,17 @@ def bfs_ground():
     q = deque()
 
     for c in range(C):
-        if board[R - 1][c] == "x":
-            q.append((R - 1, c))
+        if board[R - 1][c] == 'x':
             visited[R - 1][c] = True
+            q.append((R - 1, c))
 
     while q:
         x, y = q.popleft()
+
         for i in range(4):
             nx, ny = x + dx[i], y + dy[i]
             if 0 <= nx < R and 0 <= ny < C:
-                if not visited[nx][ny] and board[nx][ny] == "x":
+                if not visited[nx][ny] and board[nx][ny] == 'x':
                     visited[nx][ny] = True
                     q.append((nx, ny))
 
@@ -53,44 +53,37 @@ def drop_cluster(visited):
 
     for i in range(R):
         for j in range(C):
-            if board[i][j] == "x" and not visited[i][j]:
+            if board[i][j] == 'x' and not visited[i][j]:
                 cluster.append((i, j))
 
     if not cluster:
         return
 
-    fall = R
-    for x, y in cluster:
-        d = 0
-        nx = x + 1
-        while nx < R:
-            if board[nx][y] == "x":
-                if (nx, y) not in cluster:
-                    break
-            nx += 1
-            d += 1
+    cluster_set = set(cluster)
 
-        dist = 0
+    fall = R
+
+    for x, y in cluster:
         nx = x + 1
-        while nx < R and (nx, y) not in cluster:
-            if board[nx][y] == "x":
+        dist = 0
+
+        while nx < R:
+            if board[nx][y] == 'x' and (nx, y) not in cluster_set:
                 break
             nx += 1
             dist += 1
 
         fall = min(fall, dist)
 
-    cluster.sort(reverse=True)
+    for x, y in cluster:
+        board[x][y] = '.'
 
     for x, y in cluster:
-        board[x][y] = "."
-
-    for x, y in cluster:
-        board[x + fall][y] = "x"
+        board[x + fall][y] = 'x'
 
 
 for t in range(N):
-    throw(heights[t], t % 2)
+    throw(heights[t], t)
     visited = bfs_ground()
     drop_cluster(visited)
 
